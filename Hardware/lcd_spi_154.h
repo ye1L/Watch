@@ -65,24 +65,24 @@
 
 /*------------------------------------------------ 函数声明 ----------------------------------------------*/
 
-void  SPI_LCD_Init(void);      // 液晶屏以及SPI初始化   
-void  LCD_Clear(void);			 // 清屏函数
+void  SPI_LCD_Init(void);           // 液晶屏以及SPI初始化   
+void  LCD_Clear(void);			    // 清屏函数
 void  LCD_ClearRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);	// 局部清屏函数
 
 void  LCD_SetAddress(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2);	// 设置坐标		
-void  LCD_SetColor(uint32_t Color); 				   //	设置画笔颜色
+void  LCD_SetColor(uint32_t Color); 				    //	设置画笔颜色
 void  LCD_SetBackColor(uint32_t Color);  				//	设置背景颜色
-void  LCD_SetDirection(uint8_t direction);  	      //	设置显示方向
+void  LCD_SetDirection(uint8_t direction);  	        //	设置显示方向
 
 //>>>>>	显示ASCII字符
-void  LCD_SetAsciiFont(pFONT *fonts);										//	设置ASCII字体
+void  LCD_SetAsciiFont(pFONT *fonts);									//	设置ASCII字体
 void 	LCD_DisplayChar(uint16_t x, uint16_t y,uint8_t c);				//	显示单个ASCII字符
 void 	LCD_DisplayString( uint16_t x, uint16_t y, char *p);	 		//	显示ASCII字符串
 
 //>>>>>	显示中文字符，包括ASCII码
-void 	LCD_SetTextFont(pFONT *fonts);										// 设置文本字体，包括中文和ASCII字体
+void 	LCD_SetTextFont(pFONT *fonts);									// 设置文本字体，包括中文和ASCII字体
 void 	LCD_DisplayChinese(uint16_t x, uint16_t y, char *pText);		// 显示单个汉字
-void 	LCD_DisplayText(uint16_t x, uint16_t y, char *pText) ;		// 显示字符串，包括中文和ASCII字符
+void 	LCD_DisplayText(uint16_t x, uint16_t y, char *pText) ;		    // 显示字符串，包括中文和ASCII字符
 
 //>>>>>	显示整数或小数
 void  LCD_ShowNumMode(uint8_t mode);		// 设置变量显示模式，多余位填充空格还是填充0
@@ -110,28 +110,28 @@ void 	LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const u
 /*------------------------------------------------------  引脚配置宏 -------------------------------------------------*/	
 
 #define 	LCD_SPI      SPI3				// LCD用到的是SPI3
-#define	LCD_SPI_APBClock_Enable 	RCC_APB1PeriphClockCmd ( RCC_APB1Periph_SPI3,ENABLE ) 	// 使能外设时钟
+#define	LCD_SPI_APBClock_Enable 	        RCC_APB1PeriphClockCmd ( RCC_APB1Periph_SPI3,ENABLE ) 	// 使能外设时钟
 
-#define 	LCD_SCK_PIN      		 GPIO_Pin_3						// SCK引脚， 需要重定义SPI1的IO口复用
-#define 	LCD_SCK_PORT     		 GPIOB                 		// SCK引脚用到的端口  
-#define 	GPIO_LCD_SCK_CLK      RCC_APB2Periph_GPIOB  		// SCK引脚IO口时钟
+#define 	LCD_SCK_PIN      		        GPIO_Pin_3						// SCK引脚， 需要重定义SPI1的IO口复用
+#define 	LCD_SCK_PORT     		        GPIOB                 		    // SCK引脚用到的端口  
+#define 	GPIO_LCD_SCK_CLK                RCC_APB2Periph_GPIOB  		    // SCK引脚IO口时钟
 
-#define 	LCD_SDA_PIN      		 GPIO_Pin_5						// SDA引脚， 需要重定义SPI1的IO口复用
-#define 	LCD_SDA_PORT    		 GPIOB                 		// SDA引脚用到的端口  
-#define 	GPIO_LCD_SDA_CLK      RCC_APB2Periph_GPIOB  		// SDA引脚IO口时钟
+#define 	LCD_SDA_PIN      		        GPIO_Pin_5						// SDA引脚， 需要重定义SPI1的IO口复用
+#define 	LCD_SDA_PORT    		        GPIOB                 		    // SDA引脚用到的端口  
+#define 	GPIO_LCD_SDA_CLK                RCC_APB2Periph_GPIOB  		    // SDA引脚IO口时钟
 
 
-#define 	LCD_CS_PIN       				GPIO_Pin_11							// CS片选引脚，低电平有效
-#define 	LCD_CS_PORT      				GPIOD                 			// CS引脚用到的端口 
-#define 	GPIO_LCD_CS_CLK     			RCC_APB2Periph_GPIOD				// CS引脚IO口时钟
+#define 	LCD_CS_PIN       				GPIO_Pin_11				        // CS片选引脚，低电平有效
+#define 	LCD_CS_PORT      				GPIOD                 	        // CS引脚用到的端口 
+#define 	GPIO_LCD_CS_CLK     			RCC_APB2Periph_GPIOD	        // CS引脚IO口时钟
 
-#define  LCD_DC_PIN						GPIO_Pin_12				         // 数据指令选择  引脚				
-#define	LCD_DC_PORT						GPIOD									// 数据指令选择  GPIO端口
-#define 	GPIO_LCD_DC_CLK     			RCC_APB2Periph_GPIOD				// 数据指令选择  GPIO时钟 	
+#define     LCD_DC_PIN						GPIO_Pin_12				        // 数据指令选择  引脚				
+#define	    LCD_DC_PORT						GPIOD						    // 数据指令选择  GPIO端口
+#define 	GPIO_LCD_DC_CLK     			RCC_APB2Periph_GPIOD	        // 数据指令选择  GPIO时钟 	
 
-#define  LCD_Backlight_PIN				GPIO_Pin_13				         // 背光  引脚				
-#define	LCD_Backlight_PORT			GPIOD									// 背光 GPIO端口
-#define 	GPIO_LCD_Backlight_CLK     RCC_APB2Periph_GPIOD				// 背光 GPIO时钟 	
+#define     LCD_Backlight_PIN				GPIO_Pin_13				        // 背光  引脚				
+#define	    LCD_Backlight_PORT			    GPIOD							// 背光 GPIO端口
+#define 	GPIO_LCD_Backlight_CLK          RCC_APB2Periph_GPIOD			// 背光 GPIO时钟 	
 
 
 /*--------------------------------------------------------- 控制宏 ---------------------------------------------------*/
@@ -140,11 +140,11 @@ void 	LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const u
 #define 	LCD_CS_H    		 	LCD_CS_PORT->BSRR = LCD_CS_PIN		// 片选拉高
 #define 	LCD_CS_L     			LCD_CS_PORT->BRR  = LCD_CS_PIN		// 片选拉低
 
-#define	LCD_DC_Command		   GPIO_ResetBits(LCD_DC_PORT, LCD_DC_PIN)	  		// 低电平，指令传输 
-#define 	LCD_DC_Data		      GPIO_SetBits(LCD_DC_PORT, LCD_DC_PIN)				// 高电平，数据传输
+#define	    LCD_DC_Command		    GPIO_ResetBits(LCD_DC_PORT, LCD_DC_PIN)	  		        // 低电平，指令传输 
+#define 	LCD_DC_Data		        GPIO_SetBits(LCD_DC_PORT, LCD_DC_PIN)				    // 高电平，数据传输
 
-#define 	LCD_Backlight_ON     GPIO_SetBits(LCD_Backlight_PORT,LCD_Backlight_PIN)		// 高电平，开启背光
-#define 	LCD_Backlight_OFF  	GPIO_ResetBits(LCD_Backlight_PORT,LCD_Backlight_PIN)	// 低电平，关闭背光
+#define 	LCD_Backlight_ON        GPIO_SetBits(LCD_Backlight_PORT,LCD_Backlight_PIN)		// 高电平，开启背光
+#define 	LCD_Backlight_OFF  	    GPIO_ResetBits(LCD_Backlight_PORT,LCD_Backlight_PIN)	// 低电平，关闭背光
 
 
 #endif  // __LCD_130_H
