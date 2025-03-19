@@ -25,7 +25,7 @@ void Key_Init(void)
   * 返 回 值：按下按键的键码值，范围：0~2，返回0代表没有按键按下
   * 注意事项：此函数是阻塞式操作，当按键按住不放时，函数会卡住，直到按键松手
   */
- /*
+
 uint8_t Key_GetNum(void)
 {
 	uint8_t KeyNum = 0;		//定义变量，默认键码值为0
@@ -48,14 +48,13 @@ uint8_t Key_GetNum(void)
 	
 	return KeyNum;			//返回键码值，如果没有按键按下，所有if都不成立，则键码为默认值0
 }
-*/
 
 
 /// @brief 
 /// @param  
 /// @return 
 /*非阻塞式，使其立即返回按键状态，而不是等待按键松开。*/
-
+/*
 uint8_t Key_GetNum(void)
 {
     static uint8_t last_state_PB1 = 1;  // 上一次 PB1 的状态
@@ -87,4 +86,4 @@ uint8_t Key_GetNum(void)
     last_state_PB11 = current_state_PB11;
 
     return KeyNum; // 返回键码值
-}
+}*/

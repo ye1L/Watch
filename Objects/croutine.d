@@ -39,3 +39,4 @@
 .\objects\croutine.o: .\FreeRTOS\include\task.h
 .\objects\croutine.o: .\FreeRTOS\include\list.h
 .\objects\croutine.o: .\FreeRTOS\include\croutine.h
+.\objects\croutine.o: .\FreeRTOS\include\list.h

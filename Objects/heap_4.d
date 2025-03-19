@@ -1,6 +1,5 @@
 .\objects\heap_4.o: FreeRTOS\port\MemMang\heap_4.c
 .\objects\heap_4.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
-.\objects\heap_4.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\heap_4.o: .\FreeRTOS\include\FreeRTOS.h
 .\objects\heap_4.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\heap_4.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h

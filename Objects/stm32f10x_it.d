@@ -29,3 +29,13 @@
 .\objects\stm32f10x_it.o: .\Library\stm32f10x_usart.h
 .\objects\stm32f10x_it.o: .\Library\stm32f10x_wwdg.h
 .\objects\stm32f10x_it.o: .\Library\misc.h
+.\objects\stm32f10x_it.o: .\FreeRTOS\include\FreeRTOS.h
+.\objects\stm32f10x_it.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\stm32f10x_it.o: .\User\FreeRTOSConfig.h
+.\objects\stm32f10x_it.o: .\FreeRTOS\include\projdefs.h
+.\objects\stm32f10x_it.o: .\FreeRTOS\include\portable.h
+.\objects\stm32f10x_it.o: .\FreeRTOS\include\deprecated_definitions.h
+.\objects\stm32f10x_it.o: .\FreeRTOS\port\RVDS\ARM_CM3\portmacro.h
+.\objects\stm32f10x_it.o: .\FreeRTOS\include\mpu_wrappers.h
+.\objects\stm32f10x_it.o: .\FreeRTOS\include\task.h
+.\objects\stm32f10x_it.o: .\FreeRTOS\include\list.h

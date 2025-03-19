@@ -41,4 +41,4 @@
 .\objects\tasks.o: .\FreeRTOS\include\task.h
 .\objects\tasks.o: .\FreeRTOS\include\list.h
 .\objects\tasks.o: .\FreeRTOS\include\timers.h
-.\objects\tasks.o: .\FreeRTOS\include\stack_macros.h
+.\objects\tasks.o: .\FreeRTOS\include\StackMacros.h

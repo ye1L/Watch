@@ -14,9 +14,6 @@
         "name": "Start",
         "files": [
           {
-            "path": "Start/startup_stm32f10x_md.s"
-          },
-          {
             "path": "Start/core_cm3.c"
           },
           {
@@ -30,6 +27,9 @@
           },
           {
             "path": "Start/system_stm32f10x.h"
+          },
+          {
+            "path": "Start/startup_stm32f10x_hd.s"
           }
         ],
         "folders": []
@@ -250,7 +250,7 @@
     ]
   },
   "outDir": "build",
-  "deviceName": "STM32F103C8",
+  "deviceName": "STM32F103ZE",
   "packDir": ".pack/Keil/STM32F1xx_DFP.2.2.0",
   "miscInfo": {
     "uid": "d5319bb4696e7085913492cc4e56ee92"
@@ -409,7 +409,7 @@
         "libList": [],
         "defineList": [
           "USE_STDPERIPH_DRIVER",
-          "STM32F10X_MD"
+          "STM32F10X_HD"
         ]
       },
       "builderOptions": {
