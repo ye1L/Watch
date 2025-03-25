@@ -2,6 +2,7 @@
 #include "DS3231.h"
 #include "DS3231_Reg.h"
 #include "MyI2C.h"
+#include "lcd_spi_154.h"
 
 #define DS3231_ADDRESS 	    0xD0//DS3213的写地址（这里是写地址，方便后面代码的编写，把0位也计算进去了）
 								//DS3231的IIC地址：0x68
@@ -149,4 +150,30 @@ void DS3231_GetTime(u8 *year, u8 *month, u8 *date, u8 *week, u8 *hour, u8 *min, 
  
 	*sec=DS3231_ReadReg(0x00);
 	*sec=BCD_DEC(*sec);
+}
+
+void LCD_DisplayTime(void) 
+{
+  // 获取时间并显示
+  u8 year, month, date, week, hour, min, sec;
+  char dateString[20];
+  char timeString[20];
+
+  // 从 DS3231 获取时间
+  DS3231_GetTime(&year, &month, &date, &week, &hour, &min, &sec);
+
+  // 格式化时间字符串
+  snprintf(dateString, sizeof(timeString), "Date: %02d-%02d-%02d", year, month, date);
+  snprintf(timeString, sizeof(timeString), "Time: %02d:%02d:%02d", hour, min, sec);
+
+  // 清屏或清除部分区域（可选）
+  //LCD_ClearRect(0, 0, 200, 30);  // 假设清除屏幕顶部 200x30 的区域
+
+  // 设置显示颜色
+  LCD_SetColor(LCD_WHITE);  // 设置字体颜色为白色
+  LCD_SetBackColor(LCD_BLACK);  // 设置背景颜色为黑色
+
+  // 显示时间字符串
+  LCD_DisplayString(10, 10, dateString);  // 在坐标 (10, 10) 处显示时间
+  LCD_DisplayString(10, 50, timeString);  // 在坐标 (10, 10) 处显示时间
 }

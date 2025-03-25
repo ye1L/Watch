@@ -219,6 +219,16 @@ void OLED_ShowSignedNum(uint8_t Line, uint8_t Column, int32_t Number, uint8_t Le
 	}
 }
 
+void OLED_ShowFloat(uint8_t Line, uint8_t Column, float Number, uint8_t IntLength, uint8_t DecLength)
+{
+    int32_t integerPart = (int32_t)Number; // 整数部分
+    int32_t decimalPart = (int32_t)((Number - integerPart) * OLED_Pow(10, DecLength)); // 小数部分
+
+    OLED_ShowSignedNum(Line, Column, integerPart, IntLength); // 显示整数部分
+    OLED_ShowChar(Line, Column + IntLength + 1, '.');            // 显示小数点
+    OLED_ShowNum(Line, Column + IntLength + 2, decimalPart, DecLength); // 显示小数部分
+}
+
 /**
   * @brief  OLED显示数字（十六进制，正数）
   * @param  Line 起始行位置，范围：1~4

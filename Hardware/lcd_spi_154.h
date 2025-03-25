@@ -1,4 +1,4 @@
-#ifndef 	__LCD_130_H
+#ifndef __LCD_130_H
 #define	__LCD_130_H
 
 #include "stm32f10x.h"
@@ -7,7 +7,7 @@
 #include "usart.h" 
 
 #include "lcd_fonts.h"		// 图片和字库文件不是必须，用户可自行删减
-#include	"lcd_image.h" 
+#include "lcd_image.h" 
 
 
 /*----------------------------------------------- 参数宏 -------------------------------------------*/
@@ -17,10 +17,10 @@
 
 // 显示方向参数
 // 使用示例：LCD_DisplayDirection(Direction_H) 设置屏幕横屏显示
-#define	Direction_H				0					//LCD横屏显示
-#define	Direction_H_Flip	   1					//LCD横屏显示,上下翻转
-#define	Direction_V				2					//LCD竖屏显示 
-#define	Direction_V_Flip	   3					//LCD竖屏显示,上下翻转 
+#define	Direction_H			0					//LCD横屏显示
+#define	Direction_H_Flip	1					//LCD横屏显示,上下翻转
+#define	Direction_V		    2					//LCD竖屏显示 
+#define	Direction_V_Flip	3					//LCD竖屏显示,上下翻转 
 
 // 设置变量显示时多余位补0还是补空格
 // 只有 LCD_DisplayNumber() 显示整数 和 LCD_DisplayDecimals()显示小数 这两个函数用到
@@ -75,7 +75,7 @@ void  LCD_SetBackColor(uint32_t Color);  				//	设置背景颜色
 void  LCD_SetDirection(uint8_t direction);  	        //	设置显示方向
 
 //>>>>>	显示ASCII字符
-void  LCD_SetAsciiFont(pFONT *fonts);									//	设置ASCII字体
+void    LCD_SetAsciiFont(pFONT *fonts);									//	设置ASCII字体
 void 	LCD_DisplayChar(uint16_t x, uint16_t y,uint8_t c);				//	显示单个ASCII字符
 void 	LCD_DisplayString( uint16_t x, uint16_t y, char *p);	 		//	显示ASCII字符串
 
@@ -85,32 +85,35 @@ void 	LCD_DisplayChinese(uint16_t x, uint16_t y, char *pText);		// 显示单个汉字
 void 	LCD_DisplayText(uint16_t x, uint16_t y, char *pText) ;		    // 显示字符串，包括中文和ASCII字符
 
 //>>>>>	显示整数或小数
-void  LCD_ShowNumMode(uint8_t mode);		// 设置变量显示模式，多余位填充空格还是填充0
-void  LCD_DisplayNumber( uint16_t x, uint16_t y, int32_t number,uint8_t len) ;					// 显示整数
-void  LCD_DisplayDecimals( uint16_t x, uint16_t y, double number,uint8_t len,uint8_t decs);	// 显示小数
+void    LCD_ShowNumMode(uint8_t mode);		// 设置变量显示模式，多余位填充空格还是填充0
+void    LCD_DisplayNumber( uint16_t x, uint16_t y, int32_t number,uint8_t len) ;					// 显示整数
+void    LCD_DisplayDecimals( uint16_t x, uint16_t y, double number,uint8_t len,uint8_t decs);	// 显示小数
 
 //>>>>>	2D图形函数
-void  LCD_DrawPoint(uint16_t x,uint16_t y,uint32_t color);   	//画点
+void LCD_DrawPoint(uint16_t x,uint16_t y,uint32_t color);   	//画点
 
-void  LCD_DrawLine_V(uint16_t x, uint16_t y, uint16_t height);          // 画垂直线
-void  LCD_DrawLine_H(uint16_t x, uint16_t y, uint16_t width);           // 画水平线
-void  LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);	// 两点之间画线
+void LCD_DrawLine_V(uint16_t x, uint16_t y, uint16_t height);          // 画垂直线
+void LCD_DrawLine_H(uint16_t x, uint16_t y, uint16_t width);           // 画水平线
+void LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);	// 两点之间画线
 
-void  LCD_DrawRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);			//画矩形
-void  LCD_DrawCircle(uint16_t x, uint16_t y, uint16_t r);									//画圆
-void  LCD_DrawEllipse(int x, int y, int r1, int r2);											//画椭圆
+void LCD_DrawRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);			//画矩形
+void LCD_DrawCircle(uint16_t x, uint16_t y, uint16_t r);									//画圆
+void LCD_DrawEllipse(int x, int y, int r1, int r2);											//画椭圆
 
 //>>>>>	区域填充函数
-void  LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);			//填充矩形
-void  LCD_FillCircle(uint16_t x, uint16_t y, uint16_t r);									//填充圆
+void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);			//填充矩形
+void LCD_FillCircle(uint16_t x, uint16_t y, uint16_t r);									//填充圆
 
 //>>>>>	绘制单色图片
-void 	LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const uint8_t *pImage)  ;
+void LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const uint8_t *pImage)  ;
+
+void LCD_WakeUp(void);      //唤醒屏幕
+void LCD_Sleep(void);      //屏幕进入睡眠模式
 
 /*------------------------------------------------------  引脚配置宏 -------------------------------------------------*/	
 
 #define 	LCD_SPI      SPI3				// LCD用到的是SPI3
-#define	LCD_SPI_APBClock_Enable 	        RCC_APB1PeriphClockCmd ( RCC_APB1Periph_SPI3,ENABLE ) 	// 使能外设时钟
+#define	    LCD_SPI_APBClock_Enable 	        RCC_APB1PeriphClockCmd ( RCC_APB1Periph_SPI3,ENABLE ) 	// 使能外设时钟
 
 #define 	LCD_SCK_PIN      		        GPIO_Pin_3						// SCK引脚， 需要重定义SPI1的IO口复用
 #define 	LCD_SCK_PORT     		        GPIOB                 		    // SCK引脚用到的端口  

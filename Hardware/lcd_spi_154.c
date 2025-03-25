@@ -23,6 +23,7 @@
 ***/
 
 #include "lcd_spi_154.h"
+#include "DS3231.h"
 
 static pFONT *LCD_AsciiFonts;		// 英文字体，ASCII字符集
 static pFONT *LCD_CHFonts;		   // 中文字体（同时也包含英文字体）
@@ -345,7 +346,7 @@ void SPI_LCD_Init(void)
    LCD_ShowNumMode(Fill_Zero);	      	// 设置变量显示模式，多余位填充空格还是填充0
 
 // 全部设置完毕之后，打开背光	
-   LCD_Backlight_ON;  // 引脚输出高电平点亮背光
+   //LCD_Backlight_ON;  // 引脚输出高电平点亮背光
 }
 
 /****************************************************************************************************************************************
@@ -672,9 +673,9 @@ void LCD_DisplayChar(uint16_t x, uint16_t y,uint8_t c)
 *	函数功能:	在指定坐标显示指定的字符串
 *
 *	说    明:	1. 可设置要显示的字体，例如使用 LCD_SetAsciiFont(&ASCII_Font24) 设置为 2412的ASCII字体
-*					2.	可设置要显示的颜色，例如使用 LCD_SetColor(0x0000FF) 设置为蓝色
-*					3. 可设置对应的背景色，例如使用 LCD_SetBackColor(0x000000) 设置为黑色的背景色
-*					4. 使用示例 LCD_DisplayString( 10, 10, "LXB") ，在起始坐标为(10,10)的地方显示字符串"LXB"
+*				2.	可设置要显示的颜色，例如使用 LCD_SetColor(0x0000FF) 设置为蓝色
+*				3. 可设置对应的背景色，例如使用 LCD_SetBackColor(0x000000) 设置为黑色的背景色
+*				4. 使用示例 LCD_DisplayString( 10, 10, "LXB") ，在起始坐标为(10,10)的地方显示字符串"LXB"
 *
 *****************************************************************************************************************************************/
 
@@ -1349,4 +1350,45 @@ void 	LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const u
 	}	
 }
 
+/**
+  * 函 数 名: LCD_WakeUp
+  * 函数功能: 唤醒屏幕，退出睡眠模式并打开显示
+  * 返 回 值: 无
+  * 说    明: 无
+  */
+void LCD_WakeUp(void) {
+    LCD_CS_L;  // 片选拉低，使能IC
 
+    // 发送退出睡眠模式的命令
+    LCD_WriteCommand(0x11);  // 退出睡眠模式
+    LCD_Delay(120);          // 等待120ms，确保电源和时钟稳定
+
+    // 打开显示
+    LCD_WriteCommand(0x29);  // 打开显示
+
+    // 打开背光
+    LCD_Backlight_ON;        // 打开背光
+
+    LCD_CS_H;  // 片选拉高，结束通信
+}
+
+/**
+  * 函 数 名: LCD_Sleep
+  * 函数功能: 让屏幕进入睡眠模式，关闭显示并关闭背光
+  * 返 回 值: 无
+  * 说    明: 无
+  */
+void LCD_Sleep(void) {
+    LCD_CS_L;  // 片选拉低，使能IC
+
+    // 关闭背光
+    LCD_Backlight_OFF;  // 关闭背光
+
+    // 关闭显示
+    LCD_WriteCommand(0x28);  // 关闭显示
+
+    // 发送进入睡眠模式的命令
+    LCD_WriteCommand(0x10);  // 进入睡眠模式
+
+    LCD_CS_H;  // 片选拉高，结束通信
+}
