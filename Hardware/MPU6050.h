@@ -7,7 +7,7 @@
 void MPU6050_W_SCL(uint8_t BitValue);
 void MPU6050_W_SDA(uint8_t BitValue);
 uint8_t MPU6050_R_SDA(void);
-void MPU6050_I2C_Init();
+void MPU6050_I2C_Init(void);
 void MPU6050_Start(void);
 void MPU6050_Stop(void);
 void MPU6050_SendByte(uint8_t Byte);

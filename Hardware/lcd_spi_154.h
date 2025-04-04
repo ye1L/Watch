@@ -105,7 +105,10 @@ void LCD_FillRect(uint16_t x, uint16_t y, uint16_t width, uint16_t height);			//
 void LCD_FillCircle(uint16_t x, uint16_t y, uint16_t r);									//填充圆
 
 //>>>>>	绘制单色图片
-void LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const uint8_t *pImage)  ;
+void LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const uint8_t *pImage);
+
+//>>>>> 绘制彩色图片
+void LCD_DrawRGB565Image(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t *pImage);
 
 void LCD_WakeUp(void);      //唤醒屏幕
 void LCD_Sleep(void);      //屏幕进入睡眠模式

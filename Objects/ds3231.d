@@ -31,3 +31,8 @@
 .\objects\ds3231.o: Hardware\DS3231.h
 .\objects\ds3231.o: Hardware\DS3231_Reg.h
 .\objects\ds3231.o: Hardware\MyI2C.h
+.\objects\ds3231.o: Hardware\lcd_spi_154.h
+.\objects\ds3231.o: E:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\ds3231.o: Hardware\usart.h
+.\objects\ds3231.o: Hardware\lcd_fonts.h
+.\objects\ds3231.o: Hardware\lcd_image.h

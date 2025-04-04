@@ -111,8 +111,8 @@
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments> -REMAP</SimDllArguments>
-          <SimDlgDll>DCM.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
+          <SimDlgDll>DARMSTM.DLL</SimDlgDll>
+          <SimDlgDllArguments>-pSTM32F103ZE</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments></TargetDllArguments>
           <TargetDlgDll>TCM.DLL</TargetDlgDll>
@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\User;.\Library;.\FreeRTOS\include;.\FreeRTOS\port\RVDS\ARM_CM3;.\Hardware;.\System;.\Start</IncludePath>
+              <IncludePath>.\User;.\Library;.\FreeRTOS\include;.\FreeRTOS\port\RVDS\ARM_CM3;.\Hardware;.\System;.\Start;.\Tasks</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -660,6 +660,26 @@
               <FileType>5</FileType>
               <FilePath>.\System\Delay.h</FilePath>
             </File>
+            <File>
+              <FileName>System_clock.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\System_clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>System_clock.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\System_clock.h</FilePath>
+            </File>
+            <File>
+              <FileName>Systick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\Systick.c</FilePath>
+            </File>
+            <File>
+              <FileName>Systick.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\Systick.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -715,16 +735,6 @@
         <Group>
           <GroupName>Hardware</GroupName>
           <Files>
-            <File>
-              <FileName>ADC.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\ADC.c</FilePath>
-            </File>
-            <File>
-              <FileName>ADC.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Hardware\ADC.h</FilePath>
-            </File>
             <File>
               <FileName>DS3231.c</FileName>
               <FileType>1</FileType>
@@ -794,6 +804,111 @@
               <FileName>usart.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\usart.h</FilePath>
+            </File>
+            <File>
+              <FileName>Keypad.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\Keypad.c</FilePath>
+            </File>
+            <File>
+              <FileName>Keypad.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\Keypad.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_fonts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\lcd_fonts.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_image.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\lcd_image.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_spi_154.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\lcd_spi_154.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_spi_154.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\lcd_spi_154.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_fonts.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\lcd_fonts.h</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_image.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\lcd_image.h</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\MPU6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\MPU6050.h</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050_Reg.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\MPU6050_Reg.h</FilePath>
+            </File>
+            <File>
+              <FileName>PulseSensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\PulseSensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>PulseSensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\PulseSensor.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Tasks</GroupName>
+          <Files>
+            <File>
+              <FileName>Display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\Display.c</FilePath>
+            </File>
+            <File>
+              <FileName>Display.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Tasks\Display.h</FilePath>
+            </File>
+            <File>
+              <FileName>Menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\Menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>Menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Tasks\Menu.h</FilePath>
+            </File>
+            <File>
+              <FileName>Menu_Fonts.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Tasks\Menu_Fonts.h</FilePath>
+            </File>
+            <File>
+              <FileName>Tasks.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\Tasks.c</FilePath>
+            </File>
+            <File>
+              <FileName>Tasks.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Tasks\Tasks.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -1316,11 +1316,11 @@ void 	LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const u
 			{ 
 				if(disChar & 0x01)	
 				{		
-               LCD_Buff[BuffCount] =  LCD.Color;			// 当前模值不为0时，使用画笔色绘点
+               		LCD_Buff[BuffCount] =  LCD.Color;			//当前模值不为0时，使用画笔色绘点
 				}
 				else		
 				{		
-				   LCD_Buff[BuffCount] = LCD.BackColor;		//否则使用背景色绘制点
+					LCD_Buff[BuffCount] = LCD.BackColor;		//否则使用背景色绘制点
 				}
 				disChar >>= 1;     // 模值移位
 				Xaddress++;        // 水平坐标自加
@@ -1348,6 +1348,50 @@ void 	LCD_DrawImage(uint16_t x,uint16_t y,uint16_t width,uint16_t height,const u
          LCD_WriteBuff(LCD_Buff,width*(i+1+y-Yaddress));    // 写入显存     
       }
 	}	
+}
+
+/***************************************************************************************************************************************
+*	函 数 名: LCD_DrawRGB565Image
+*
+*	入口参数: x       - 起始水平坐标
+*             y       - 起始垂直坐标
+*             width   - 图片宽度（像素）
+*             height  - 图片高度（像素）
+*             pImage  - RGB565格式的图片数据（uint16_t数组）
+*
+*	函数功能: 在指定位置显示RGB565格式的彩色图片
+*
+*	说    明: 1. 图片数据需为RGB565格式（每个像素2字节）
+*            2. 图片数据需按行优先存储
+*            3. 缓冲区大小需足够容纳至少一行像素（否则需分段写入）
+*****************************************************************************************************************************************/
+void LCD_DrawRGB565Image(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint16_t *pImage) 
+{
+    uint16_t Buff_Height;  // 缓冲区能容纳的行数
+    uint16_t BuffCount = 0; // 缓冲区计数
+    uint16_t i, j;
+
+    // 计算缓冲区能容纳的行数（每个像素2字节）
+    Buff_Height = sizeof(LCD_Buff) / (width * 2);
+
+    for (i = 0; i < height; i++) 
+    {
+        // 将一行像素数据拷贝到缓冲区
+        for (j = 0; j < width; j++) 
+        {
+            LCD_Buff[BuffCount++] = pImage[i * width + j];
+        }
+
+        // 缓冲区满或到达最后一行时写入屏幕
+        if (BuffCount >= sizeof(LCD_Buff) / 2 || (i + 1) == height) 
+        {
+            LCD_SetAddress(x, y, x + width - 1, y + Buff_Height - 1);
+            LCD_WriteBuff(LCD_Buff, BuffCount);
+            
+            y += Buff_Height; // 更新Y坐标
+            BuffCount = 0;    // 重置缓冲区计数
+        }
+    }
 }
 
 /**

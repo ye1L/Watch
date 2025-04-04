@@ -120,7 +120,6 @@ void DS3231_SetTime(u8 year, u8 mon, u8 da, u8 week, u8 hour, u8 min, u8 sec)
  
 }	
 
-
 /**
   * 函    数：DS3231获取数据
   * 参    数：year--年,month--月,date--日,week--周几,hour--时,min--分,sec--秒,
@@ -139,7 +138,7 @@ void DS3231_GetTime(u8 *year, u8 *month, u8 *date, u8 *week, u8 *hour, u8 *min, 
 	*date=BCD_DEC(*date);
  
 	*week=DS3231_ReadReg(0x03);  
-	*week=BCD_DEC(*week);
+	//*week=BCD_DEC(*week);
  
 	*hour=DS3231_ReadReg(0x02); 
 	*hour&=0x3f;  //设定为12小时制的时候起作用，去除小时制设定位的读取                 
@@ -150,30 +149,4 @@ void DS3231_GetTime(u8 *year, u8 *month, u8 *date, u8 *week, u8 *hour, u8 *min, 
  
 	*sec=DS3231_ReadReg(0x00);
 	*sec=BCD_DEC(*sec);
-}
-
-void LCD_DisplayTime(void) 
-{
-  // 获取时间并显示
-  u8 year, month, date, week, hour, min, sec;
-  char dateString[20];
-  char timeString[20];
-
-  // 从 DS3231 获取时间
-  DS3231_GetTime(&year, &month, &date, &week, &hour, &min, &sec);
-
-  // 格式化时间字符串
-  snprintf(dateString, sizeof(timeString), "Date: %02d-%02d-%02d", year, month, date);
-  snprintf(timeString, sizeof(timeString), "Time: %02d:%02d:%02d", hour, min, sec);
-
-  // 清屏或清除部分区域（可选）
-  //LCD_ClearRect(0, 0, 200, 30);  // 假设清除屏幕顶部 200x30 的区域
-
-  // 设置显示颜色
-  LCD_SetColor(LCD_WHITE);  // 设置字体颜色为白色
-  LCD_SetBackColor(LCD_BLACK);  // 设置背景颜色为黑色
-
-  // 显示时间字符串
-  LCD_DisplayString(10, 10, dateString);  // 在坐标 (10, 10) 处显示时间
-  LCD_DisplayString(10, 50, timeString);  // 在坐标 (10, 10) 处显示时间
 }

@@ -4,7 +4,8 @@
   "dependenceList": [],
   "srcDirs": [
     "Hardware",
-    "System"
+    "System",
+    "Tasks"
   ],
   "virtualFolder": {
     "name": "<virtual_root>",
@@ -404,7 +405,8 @@
           "RTE/_Target 1",
           "Hardware",
           "System",
-          "FreeRTOS/include"
+          "FreeRTOS/include",
+          "Tasks"
         ],
         "libList": [],
         "defineList": [

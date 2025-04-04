@@ -120,7 +120,7 @@
 //#define configTASK_NOTIFICATION_ARRAY_ENTRIES   3	
 
 //1 使用互斥信号量
-//#define configUSE_MUTEXES                       0	
+#define configUSE_MUTEXES                       1	
 
 //1 使用递归互斥信号量 
 //#define configUSE_RECURSIVE_MUTEXES             0
@@ -240,7 +240,7 @@
 //#define configGENERATE_RUN_TIME_STATS           0
 
 //启用可视化跟踪调试
-//#define configUSE_TRACE_FACILITY                0
+//#define configUSE_TRACE_FACILITY                1
 
 /* 与宏configUSE_TRACE_FACILITY同时为1时会编译下面3个函数
  * prvWriteNameToBuffer()
@@ -328,10 +328,10 @@
 #define INCLUDE_vTaskDelay                      1
 #define INCLUDE_xTaskGetSchedulerState          1
 #define INCLUDE_xTaskGetCurrentTaskHandle       1
-#define INCLUDE_uxTaskGetStackHighWaterMark     0
+#define INCLUDE_uxTaskGetStackHighWaterMark     1
 #define INCLUDE_uxTaskGetStackHighWaterMark2    0
 #define INCLUDE_xTaskGetIdleTaskHandle          0
-#define INCLUDE_eTaskGetState                   0
+#define INCLUDE_eTaskGetState                   1
 #define INCLUDE_xEventGroupSetBitFromISR        1
 #define INCLUDE_xTimerPendFunctionCall          0
 #define INCLUDE_xTaskAbortDelay                 0

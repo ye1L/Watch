@@ -741,7 +741,7 @@ extern "C" {
 #endif
 
 #ifndef configUSE_TRACE_FACILITY
-	#define configUSE_TRACE_FACILITY 0
+	#define configUSE_TRACE_FACILITY 1
 #endif
 
 #ifndef mtCOVERAGE_TEST_MARKER

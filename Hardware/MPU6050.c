@@ -25,7 +25,7 @@ uint8_t MPU6050_R_SDA(void)
 	return BitValue;
 }
 
-void MPU6050_I2C_Init()
+void MPU6050_I2C_Init(void)
 {
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 
