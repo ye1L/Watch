@@ -10,11 +10,13 @@
 #include "stdio.h"
 #include "MPU6050.h"
 #include "Keypad.h"
+#include "PulseSensor.h"
 
 //定义信号量
 SemaphoreHandle_t Time_SignalHandle;
 SemaphoreHandle_t Gyro_SignalHandle;
 SemaphoreHandle_t Keypad_SignalHandle;
+SemaphoreHandle_t HeartRate_SignalHandle;
 SemaphoreHandle_t xMutex = NULL;
 
 //定义任务句柄
@@ -23,6 +25,8 @@ TaskHandle_t Gyro_TaskHandle;
 TaskHandle_t HomePage_TaskHandle;
 TaskHandle_t Menu_TaskHandle;
 TaskHandle_t Keypad_TaskHandle;
+TaskHandle_t HeartRate_TaskHandle;
+
 
 //定义全局变量
 bool LCD_Mode = true;
@@ -34,9 +38,6 @@ const TickType_t timeoutTicks = pdMS_TO_TICKS(30000);
 
 /**
  * @brief 创建多任务
- * 
- * @param argument 
- */
 void Start_Task(void * argument)
 {
     xTaskCreate(TimeUpdate, "Time_Task", 256, NULL, 1, &Time_TaskHandle);
@@ -44,6 +45,7 @@ void Start_Task(void * argument)
     xTaskCreate(Display_Menu, "Menu_Task", 128, NULL, 2, &Menu_TaskHandle);
     xTaskCreate(Read_Gyro, "Gyro_Task", 128, NULL, 1, &Gyro_TaskHandle);
     xTaskCreate(Keypad, "Keypad_Task", 128, NULL, 1, &Keypad_TaskHandle);
+    xTaskCreate(Get_HeartRate, "HeartRate_Task", 128, NULL, 1, &HeartRate_TaskHandle);
     vTaskSuspend(Menu_TaskHandle);
     vTaskSuspend(Gyro_TaskHandle);
 
@@ -52,10 +54,8 @@ void Start_Task(void * argument)
 
 /**
  * @brief DS3231更新时间
- * 
- * @param argument 
  */
-void TimeUpdate(void *argument) 
+void TimeUpdate(void * argument) 
 {
     uint8_t year, month, date, week, hour, min, sec;
     while (1) 
@@ -78,10 +78,8 @@ void TimeUpdate(void *argument)
 
 /**
  * @brief 扫描法读取矩阵按键
- * 
- * @param argument 
  */
-void Keypad(void *argument) 
+void Keypad(void * argument) 
 {
     while (1) 
     {
@@ -102,8 +100,6 @@ void Keypad(void *argument)
 
 /**
  * @brief 读取陀螺仪MPU6050数据
- * 
- * @param argument 
  */
 void Read_Gyro(void * argument)
 {
@@ -123,6 +119,7 @@ void Read_Gyro(void * argument)
 			LCD_WakeUp();   //唤醒屏幕
 			LCD_Mode = true;    //屏幕状态：点亮
 			vTaskResume(HomePage_TaskHandle);   //恢复Display_HomePage任务
+            HomePage_Static();
             xSemaphoreTake(xMutex, portMAX_DELAY);
 			lastActivityTime = xTaskGetTickCount(); //更新最后活动时间
             xSemaphoreGive(xMutex);
@@ -133,20 +130,28 @@ void Read_Gyro(void * argument)
 	}
 }
 
+void Get_HeartRate(void * argument)
+{
+    while(1)
+    {
+        // 安全获取信号量
+        if (xSemaphoreTake(HeartRate_SignalHandle, portMAX_DELAY) == pdTRUE) 
+        {
+            Get_Adc_Average(0, 50);
+            xSemaphoreGive(HeartRate_SignalHandle);  // 无需检查，除非信号量可能被删除
+        } 
+        vTaskDelay(pdMS_TO_TICKS(100));  // 明确使用 pdMS_TO_TICKS 转换
+    }
+}
+
 /**
  * @brief HomePage界面显示日期、时间、状态栏
- * 
- * @param argument 
  */
 void Display_HomePage(void * argument)
 {
     First_Flag = false;
     while(1)
     {
-        //获取并打印当前任务（HomePage_Task）的堆栈剩余空间
-        //UBaseType_t stack = uxTaskGetStackHighWaterMark(NULL);
-        //printf("HomePage_Task stack remaining: %d\n", stack);
-
         if (!First_Flag)
         {
             LCD_WakeUp();
@@ -202,8 +207,6 @@ void Display_HomePage(void * argument)
 
 /**
  * @brief Menu界面显示
- * 
- * @param argument 
  */
 void Display_Menu(void *argument)
 { 
@@ -250,14 +253,65 @@ void Display_Menu(void *argument)
                 break;
                 
             case '5':  // 确认
+            {
                 printf("confirm\n");
-                break;
+                bool HeartRate_Flag = true;
+                bool firstEnter = true;
+                while (HeartRate_Flag)
+                {
+                    // 实时更新按键值
+                    xSemaphoreTake(Keypad_SignalHandle, pdMS_TO_TICKS(10));
+                    key = Keypad_Scan();
+                    xSemaphoreGive(Keypad_SignalHandle);
+            
+                    if (firstEnter)    
+                    {
+                        LCD_Clear();        // 进入后清屏1次
+                        firstEnter = false;
+                    }
+                    
+                    switch (place)
+                    {
+                    case 0:
+                        /* code */
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        {
+                            xSemaphoreTake(HeartRate_SignalHandle, pdMS_TO_TICKS(10));
+                            Interface_HeartRate();
+                            xSemaphoreGive(HeartRate_SignalHandle);
+                        }
+                        break;
+                    case 3:
+                        break;
+                    }
+            
+                    // 检测退出按键
+                    if (key == '3')
+                    {
+                        printf("Exit\n");
+                        LCD_Clear();
+                        HeartRate_Flag = false;
+                    }
 
-            case '3':   // 退出
-                printf("Exit\n");
-                break;
+                    if (key == '1')
+                    {
+                        printf("Enter HomePage\n");
+                        LCD_Clear();
+                        First_Flag = false; 
+                        HeartRate_Flag = false;
+                        vTaskResume(HomePage_TaskHandle);
+                        vTaskDelay(10);  // 让出 CPU，确保挂起操作完成
+                        vTaskSuspend(Menu_TaskHandle);
+                    }
+
+                    vTaskDelay(100);  // 防止CPU占用过高
+                }
+            } break;
                 
-            case '1':  // 时间显示界面
+            case '1':  // 无论在Menu里的哪个界面，按下‘1’后直接返回首页
                 printf("Enter HomePage\n");
                 LCD_Clear();
                 First_Flag = false; 
@@ -278,13 +332,5 @@ void Display_Menu(void *argument)
             vTaskSuspend(Menu_TaskHandle);
         }
         vTaskDelay(pdMS_TO_TICKS(100));  // 适当延时，防止CPU占用过高
-    }
-}
-
-void Display_HeartRate(void * argument)
-{
-    while(1)
-    {
-        
     }
 }

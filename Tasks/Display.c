@@ -96,10 +96,12 @@ void Select(uint8_t place)
  * @brief HeartRate显示界面
  * 
  */
-void LCD_DisplayHeartRate(void)
+void Interface_HeartRate(void)
 {
+    printf("--------");
 	char HeartRate[20];
-	uint16_t val = Get_Adc_Average(50, 50);
+	uint16_t val = Get_Adc_Average(0, 50);
+    printf("%d\n", val);
 	// 格式化时间字符串
 	snprintf(HeartRate, sizeof(HeartRate), "HeartRate: %d", val);
 

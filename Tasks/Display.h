@@ -7,6 +7,6 @@ void HomePage_Static(void);
 void HomePage_Dynamic(void);
 void Menu_Static(void);
 void Select(uint8_t place);
-void LCD_DisplayHeartRate(void);
+void Interface_HeartRate(void);
 
 #endif
