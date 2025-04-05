@@ -2,6 +2,7 @@
 #include "PulseSensor.h"
 #include "stm32f10x.h"
 #include "Tim.h"
+#include "stdio.h"
 			 
 //初始化ADC
 //这里我们仅以规则通道为例
@@ -191,7 +192,7 @@ static void calculatePulse(uint8_t *pulse, uint16_t *maxValue)
   */
 uint16_t getArrayMax(uint16_t arr[], int size) 
 {
-    if (size == 0) return 0;
+    if (size == 0) return 0;    //
  
     uint16_t max = arr[0];
     for (int i = 1; i < size; i++) 
@@ -212,7 +213,7 @@ uint16_t getArrayMax(uint16_t arr[], int size)
   */
 uint16_t getArrayMin(uint16_t arr[], int size)
 {
-    if (size == 0) return 0xFFFF;
+    if (size == 0) return 0xFFFF;   //
     
     uint16_t min = arr[0];
     for (int i = 1; i < size; i++)

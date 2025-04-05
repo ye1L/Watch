@@ -12,6 +12,8 @@
 #define 	PulseSensor_GPIO_PORT							GPIOC
 #define 	PulseSensor_GPIO_PIN							GPIO_Pin_4
  
+#define HEART_PERIOD 10  // Example: 10ms between samples
+
 void PulseSensor_ADC_Init(void);
 u16  Get_Adc(u8 ch); 
 u16  Get_Adc_Average(u8 ch,u8 times); 

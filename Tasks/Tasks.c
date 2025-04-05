@@ -36,8 +36,6 @@ static bool Alarm_Flag = true;
 TickType_t lastActivityTime = 0;
 const TickType_t timeoutTicks = pdMS_TO_TICKS(30000);
 
-/**
- * @brief 创建多任务
 void Start_Task(void * argument)
 {
     xTaskCreate(TimeUpdate, "Time_Task", 256, NULL, 1, &Time_TaskHandle);
@@ -52,9 +50,6 @@ void Start_Task(void * argument)
     vTaskDelete(NULL);
 }
 
-/**
- * @brief DS3231更新时间
- */
 void TimeUpdate(void * argument) 
 {
     uint8_t year, month, date, week, hour, min, sec;
@@ -76,9 +71,6 @@ void TimeUpdate(void * argument)
     }
 }
 
-/**
- * @brief 扫描法读取矩阵按键
- */
 void Keypad(void * argument) 
 {
     while (1) 
