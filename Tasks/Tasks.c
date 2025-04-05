@@ -36,22 +36,20 @@ static bool Alarm_Flag = true;
 TickType_t lastActivityTime = 0;
 const TickType_t timeoutTicks = pdMS_TO_TICKS(30000);
 
-void Start_Task(void * argument)
-{
+void Start_Task(void * argument) {
     xTaskCreate(TimeUpdate, "Time_Task", 256, NULL, 1, &Time_TaskHandle);
     xTaskCreate(Display_HomePage, "HomePage_Task", 256, NULL, 3, &HomePage_TaskHandle);
     xTaskCreate(Display_Menu, "Menu_Task", 128, NULL, 2, &Menu_TaskHandle);
     xTaskCreate(Read_Gyro, "Gyro_Task", 128, NULL, 1, &Gyro_TaskHandle);
     xTaskCreate(Keypad, "Keypad_Task", 128, NULL, 1, &Keypad_TaskHandle);
-    xTaskCreate(Get_HeartRate, "HeartRate_Task", 128, NULL, 1, &HeartRate_TaskHandle);
+    xTaskCreate(Read_HeartRate, "HeartRate_Task", 128, NULL, 1, &HeartRate_TaskHandle);
     vTaskSuspend(Menu_TaskHandle);
     vTaskSuspend(Gyro_TaskHandle);
 
     vTaskDelete(NULL);
 }
 
-void TimeUpdate(void * argument) 
-{
+void TimeUpdate(void * argument) {
     uint8_t year, month, date, week, hour, min, sec;
     while (1) 
     {
@@ -71,17 +69,14 @@ void TimeUpdate(void * argument)
     }
 }
 
-void Keypad(void * argument) 
-{
-    while (1) 
-    {
+void Keypad(void * argument) {
+    while (1) {
         //获取并打印当前任务（HomePage_Task）的堆栈剩余空间
         //UBaseType_t stack = uxTaskGetStackHighWaterMark(NULL);
         //printf("Keypad_Task stack remaining: %d\n", stack);
 
         // 安全获取信号量
-        if (xSemaphoreTake(Keypad_SignalHandle, pdMS_TO_TICKS(1)) == pdTRUE) 
-        {
+        if (xSemaphoreTake(Keypad_SignalHandle, pdMS_TO_TICKS(1)) == pdTRUE) {
             Keypad_Scan();
             xSemaphoreGive(Keypad_SignalHandle);
         }
@@ -122,14 +117,11 @@ void Read_Gyro(void * argument)
 	}
 }
 
-void Get_HeartRate(void * argument)
-{
-    while(1)
-    {
+void Read_HeartRate(void * argument) {
+    while(1){
         // 安全获取信号量
-        if (xSemaphoreTake(HeartRate_SignalHandle, portMAX_DELAY) == pdTRUE) 
-        {
-            Get_Adc_Average(0, 50);
+        if (xSemaphoreTake(HeartRate_SignalHandle, portMAX_DELAY) == pdTRUE) {
+            Get_HeartRate();
             xSemaphoreGive(HeartRate_SignalHandle);  // 无需检查，除非信号量可能被删除
         } 
         vTaskDelay(pdMS_TO_TICKS(100));  // 明确使用 pdMS_TO_TICKS 转换
@@ -139,18 +131,14 @@ void Get_HeartRate(void * argument)
 /**
  * @brief HomePage界面显示日期、时间、状态栏
  */
-void Display_HomePage(void * argument)
-{
+void Display_HomePage(void * argument) {
     First_Flag = false;
-    while(1)
-    {
-        if (!First_Flag)
-        {
+    while(1){
+        if (!First_Flag){
             LCD_WakeUp();
             First_Flag = true;
             HomePage_Static();
-            if (Alarm_Flag)
-            {
+            if (Alarm_Flag) {
                 LCD_DisplayString(120, 220, "A");
                 xSemaphoreTake(xMutex, portMAX_DELAY);
                 lastActivityTime = xTaskGetTickCount(); // 更新最后活动时间
@@ -159,8 +147,7 @@ void Display_HomePage(void * argument)
         }
 
         //无操作255后息屏
-        if (LCD_Mode && ((xTaskGetTickCount() - lastActivityTime) >= timeoutTicks))
-        {
+        if (LCD_Mode && ((xTaskGetTickCount() - lastActivityTime) >= timeoutTicks)) {
             vTaskResume(Gyro_TaskHandle);
             LCD_Sleep();  // 调用 LCD 休眠函数（关闭背光）
             printf("Timeout\r\n");
@@ -173,11 +160,9 @@ void Display_HomePage(void * argument)
         uint8_t key = Keypad_Scan();
         xSemaphoreGive(Keypad_SignalHandle);
         
-        if (key == '4')    //检测Menu按键
-		{
+        if (key == '4') {
             printf("Enter Menu\n");
-			if (eTaskGetState(Menu_TaskHandle) == eSuspended) 
-            {
+			if (eTaskGetState(Menu_TaskHandle) == eSuspended) {
                 vTaskResume(Menu_TaskHandle);
                 Menu_Flag = false;
                 vTaskDelay(pdMS_TO_TICKS(10));
@@ -200,14 +185,12 @@ void Display_HomePage(void * argument)
 /**
  * @brief Menu界面显示
  */
-void Display_Menu(void *argument)
-{ 
+void Display_Menu(void *argument) { 
     static uint8_t place = 0;          // 当前选中的位置（0~4）
     const uint8_t max_place = 3;       // 最大选项位置
     Menu_Flag = false;
 
-    while(1)
-    {
+    while(1) {
         //获取并打印当前任务（Menu_Task）的堆栈剩余空间
         //UBaseType_t stack = uxTaskGetStackHighWaterMark(NULL);
         //taskENTER_CRITICAL();
@@ -219,15 +202,13 @@ void Display_Menu(void *argument)
         uint8_t key = Keypad_Scan();
         xSemaphoreGive(Keypad_SignalHandle);
 
-        if (!Menu_Flag)
-        {
+        if (!Menu_Flag) {
             Select(0);
             Menu_Flag = true;
         }
         
         // 处理按键逻辑
-        switch(key)
-        {
+        switch(key) {
             case '2':  // 上移
                 printf("Upward\n");
                 LCD_Clear();
@@ -244,52 +225,44 @@ void Display_Menu(void *argument)
                 vTaskDelay(100);
                 break;
                 
-            case '5':  // 确认
-            {
+            case '5': {// 确认
                 printf("confirm\n");
                 bool HeartRate_Flag = true;
                 bool firstEnter = true;
-                while (HeartRate_Flag)
-                {
+                while (HeartRate_Flag) {
                     // 实时更新按键值
                     xSemaphoreTake(Keypad_SignalHandle, pdMS_TO_TICKS(10));
                     key = Keypad_Scan();
                     xSemaphoreGive(Keypad_SignalHandle);
             
-                    if (firstEnter)    
-                    {
+                    if (firstEnter) {
                         LCD_Clear();        // 进入后清屏1次
                         firstEnter = false;
                     }
                     
-                    switch (place)
-                    {
+                    switch (place) {
                     case 0:
                         /* code */
                         break;
                     case 1:
                         break;
-                    case 2:
-                        {
+                    case 2: {
                             xSemaphoreTake(HeartRate_SignalHandle, pdMS_TO_TICKS(10));
                             Interface_HeartRate();
                             xSemaphoreGive(HeartRate_SignalHandle);
-                        }
-                        break;
+                        } break;
                     case 3:
                         break;
                     }
             
                     // 检测退出按键
-                    if (key == '3')
-                    {
+                    if (key == '3') {
                         printf("Exit\n");
                         LCD_Clear();
                         HeartRate_Flag = false;
                     }
 
-                    if (key == '1')
-                    {
+                    if (key == '1') {
                         printf("Enter HomePage\n");
                         LCD_Clear();
                         First_Flag = false; 
@@ -314,8 +287,7 @@ void Display_Menu(void *argument)
         }
 
         //无操作30s后息屏
-        if (LCD_Mode && ((xTaskGetTickCount() - lastActivityTime) >= timeoutTicks))
-        {
+        if (LCD_Mode && ((xTaskGetTickCount() - lastActivityTime) >= timeoutTicks)) {
             vTaskResume(Gyro_TaskHandle);
             LCD_Sleep();  // 调用 LCD 休眠函数（关闭背光）
             printf("Timeout\r\n");

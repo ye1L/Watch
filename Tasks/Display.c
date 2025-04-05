@@ -100,7 +100,7 @@ void Interface_HeartRate(void)
 {
     printf("--------");
 	char HeartRate[20];
-	uint16_t val = Get_Adc_Average(0, 50);
+	uint16_t val = Get_HeartRate();
     printf("%d\n", val);
 	// 格式化时间字符串
 	snprintf(HeartRate, sizeof(HeartRate), "HeartRate: %d", val);
