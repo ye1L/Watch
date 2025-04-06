@@ -14,7 +14,7 @@
 #define HEART_PERIOD          (1000 / SAMPLE_RATE)  // 采样间隔(ms)
 
 void PulseSensor_ADC_Init(void);
-void getPulse(uint8_t *pulse, uint16_t *maxValue);
+void getPulse(void);
 static void scaleData(void);
 static void calculatePulse(uint8_t *pulse, uint16_t *maxValue);
 static uint16_t getArrayMax(uint16_t arr[], int size);

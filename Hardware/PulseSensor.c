@@ -51,19 +51,20 @@ void PulseSensor_ADC_Init(void) {
 }
 
 /******************** 核心算法部分 ********************/
-void getPulse(uint8_t *pulse, uint16_t *maxValue) {
-    /* 读取ADC值 */
-    PulseBuffer[bufferPos++] = ADC_GetConversionValue(ADCx);
+void getPulse(void) {
+    uint16_t adcValue = ADC_GetConversionValue(ADCx);
+    PulseBuffer[bufferPos++] = adcValue;
     
-    /* 缓冲区满时处理数据 */
     if(bufferPos >= BUFFER_SIZE) {
         bufferPos = 0;
         scaleData();
-        calculatePulse(pulse, maxValue);
         
-        /* 更新最后一次有效数据 */
-        if(*pulse > 0) {
-            lastHeartRate = *pulse;
+        uint8_t pulse;
+        uint16_t maxValue;
+        calculatePulse(&pulse, &maxValue);  // 使用局部变量
+        
+        if(pulse > 0) {
+            lastHeartRate = pulse;
             lastIBI = IBI;
         }
     }
@@ -76,11 +77,11 @@ static void scaleData(void) {
     
     /* 信号有效性检查 */
     if(delta < 200) {  // 信号变化过小
-        for(int i=0; i<BUFFER_SIZE; i++) 
+        for(int i = 0; i < BUFFER_SIZE; i ++) 
             PulseBuffer[i] = delta/2;
     } 
     else {  // 归一化到0-1000范围
-        for(int i=0; i<BUFFER_SIZE; i++) 
+        for(int i = 0; i < BUFFER_SIZE; i ++) 
             PulseBuffer[i] = (PulseBuffer[i] - min) * 1000 / delta;
     }
 }
@@ -90,7 +91,7 @@ static void calculatePulse(uint8_t *pulse, uint16_t *maxValue) {
     uint16_t max = 0, min = 4095, threshold;
     
     /* 计算动态阈值 */
-    for(int i=0; i<BUFFER_SIZE; i++) {
+    for(int i = 0; i < BUFFER_SIZE; i ++) {
         if(PulseBuffer[i] > max) max = PulseBuffer[i];
         if(PulseBuffer[i] < min) min = PulseBuffer[i];
     }
@@ -99,14 +100,25 @@ static void calculatePulse(uint8_t *pulse, uint16_t *maxValue) {
     
     /* 检测心跳上升沿 */
     uint8_t lastState = 0;
-    for(int i=0; i<BUFFER_SIZE; i++) {
+    uint8_t peakCount = 0;  // 用于记录检测到的上升沿数量
+
+    for (int i = 0; i < BUFFER_SIZE; i++) {
         uint8_t currentState = (PulseBuffer[i] > threshold);
-        
-        if(!lastState && currentState) {  // 上升沿检测
-            if(!firstPeak) firstPeak = i;
-            else if(!secondPeak) secondPeak = i;
+
+        if (!lastState && currentState) {  // 上升沿检测
+            if (peakCount == 0) {        // 第一次检测到上升沿
+                firstPeak = i;
+                peakCount ++;
+            } 
+            else if (peakCount == 1) {   // 第二次检测到上升沿
+                secondPeak = i;
+                peakCount ++;
+                break;  // 找到两个波峰后可以提前退出循环
+            }
         }
         lastState = currentState;
+        printf("max=%d, min=%d, threshold=%d\n", max, min, threshold);
+        printf("firstPeak=%d, secondPeak=%d\n", firstPeak, secondPeak);
     }
     
     /* 计算心率 */
